@@ -42,7 +42,7 @@ function auto_newsletter_admin_menu() {
 	add_submenu_page(
 		'auto-newsletter-mailer',
 		__( 'Send Management', 'auto-newsletter' ),
-		__( 'Send Management', 'auto-newsletter' ),
+		__( 'Send', 'auto-newsletter' ),
 		$mailer_cap,
 		'auto-newsletter-send',
 		'auto_newsletter_mailer_send_page'
@@ -51,7 +51,7 @@ function auto_newsletter_admin_menu() {
 	add_submenu_page(
 		'auto-newsletter-mailer',
 		__( 'Send History', 'auto-newsletter' ),
-		__( 'Send History', 'auto-newsletter' ),
+		__( 'History', 'auto-newsletter' ),
 		$mailer_cap,
 		'auto-newsletter-mailer-history',
 		'auto_newsletter_mailer_history_page'
@@ -59,7 +59,7 @@ function auto_newsletter_admin_menu() {
 	add_submenu_page(
 		'auto-newsletter-mailer',
 		__( 'Subscribers', 'auto-newsletter' ),
-		__( 'Subscribers', 'auto-newsletter' ),
+		__( 'List', 'auto-newsletter' ),
 		$mailer_cap,
 		'auto-newsletter-subscribers',
 		'auto_newsletter_subscribers_page'
@@ -68,7 +68,7 @@ function auto_newsletter_admin_menu() {
 	add_submenu_page(
 		'auto-newsletter-mailer',
 		__( 'Email Template', 'auto-newsletter' ),
-		__( 'Email Template', 'auto-newsletter' ),
+		__( 'Template', 'auto-newsletter' ),
 		$mailer_cap,
 		'auto-newsletter-mailer-template',
 		'auto_newsletter_mailer_template_page'
