@@ -263,29 +263,29 @@ function auto_newsletter_subscribers_page() {
 	?>
 
 	<div class="wrap">
-		<h1>Subscribers</h1>
+		<h1><?php echo esc_html__( 'Subscribers', 'auto-newsletter' ); ?></h1>
 
-		<!-- Statistiky -->
+		<!-- Stats -->
 		<div style="display:flex;gap:20px;margin:20px 0;flex-wrap:wrap">
 			<div class="card" style="min-width:150px;padding:15px 20px">
 				<div style="font-size:24px;font-weight:bold;color:#1d2327"><?php echo $total; ?></div>
-				<div class="description" style="font-size:13px">Celkem</div>
+				<div class="description" style="font-size:13px"><?php echo esc_html__( 'Total', 'auto-newsletter' ); ?></div>
 			</div>
 			<div class="card" style="min-width:150px;padding:15px 20px">
 				<div style="font-size:24px;font-weight:bold;color:#00a32a"><?php echo $confirmed_count; ?></div>
-				<div class="description" style="font-size:13px">Potvrzení</div>
+				<div class="description" style="font-size:13px"><?php echo esc_html__( 'Confirmed', 'auto-newsletter' ); ?></div>
 			</div>
 			<div class="card" style="min-width:150px;padding:15px 20px">
 				<div style="font-size:24px;font-weight:bold;color:#d63638"><?php echo $unconfirmed_count; ?></div>
-				<div class="description" style="font-size:13px">Nepotvrzení</div>
+				<div class="description" style="font-size:13px"><?php echo esc_html__( 'Unconfirmed', 'auto-newsletter' ); ?></div>
 			</div>
 		</div>
 
-		<!-- Filtr (WP subsubsub styl) -->
+		<!-- Filter (WP subsubsub style) -->
 		<ul class="subsubsub" style="margin:15px 0 10px">
-			<li><a href="<?php echo esc_url( menu_page_url( 'auto-newsletter-subscribers', false ) ); ?>" <?php if ( ! $filter ) echo 'class="current"'; ?>>Všichni <span class="count">(<?php echo $total; ?>)</span></a> |</li>
-			<li><a href="<?php echo esc_url( add_query_arg( 'auto_newsletter_filter', 'confirmed', menu_page_url( 'auto-newsletter-subscribers', false ) ) ); ?>" <?php if ( $filter === 'confirmed' ) echo 'class="current"'; ?>>Potvrzení <span class="count">(<?php echo $confirmed_count; ?>)</span></a> |</li>
-			<li><a href="<?php echo esc_url( add_query_arg( 'auto_newsletter_filter', 'unconfirmed', menu_page_url( 'auto-newsletter-subscribers', false ) ) ); ?>" <?php if ( $filter === 'unconfirmed' ) echo 'class="current"'; ?>>Nepotvrzení <span class="count">(<?php echo $unconfirmed_count; ?>)</span></a></li>
+			<li><a href="<?php echo esc_url( menu_page_url( 'auto-newsletter-subscribers', false ) ); ?>" <?php if ( ! $filter ) echo 'class="current"'; ?>><?php echo esc_html__( 'All', 'auto-newsletter' ); ?> <span class="count">(<?php echo $total; ?>)</span></a> |</li>
+			<li><a href="<?php echo esc_url( add_query_arg( 'auto_newsletter_filter', 'confirmed', menu_page_url( 'auto-newsletter-subscribers', false ) ) ); ?>" <?php if ( $filter === 'confirmed' ) echo 'class="current"'; ?>><?php echo esc_html__( 'Confirmed', 'auto-newsletter' ); ?> <span class="count">(<?php echo $confirmed_count; ?>)</span></a> |</li>
+			<li><a href="<?php echo esc_url( add_query_arg( 'auto_newsletter_filter', 'unconfirmed', menu_page_url( 'auto-newsletter-subscribers', false ) ) ); ?>" <?php if ( $filter === 'unconfirmed' ) echo 'class="current"'; ?>><?php echo esc_html__( 'Unconfirmed', 'auto-newsletter' ); ?> <span class="count">(<?php echo $unconfirmed_count; ?>)</span></a></li>
 		</ul>
 		<div class="clear"></div>
 
@@ -297,11 +297,11 @@ function auto_newsletter_subscribers_page() {
 			<div class="tablenav top">
 				<div class="alignleft actions">
 					<select name="auto_newsletter_sub_action">
-						<option value="">Hromadná akce</option>
-						<option value="confirm">Potvrdit vybrané</option>
-						<option value="delete">Smazat vybrané</option>
+						<option value=""><?php echo esc_html__( 'Bulk Actions', 'auto-newsletter' ); ?></option>
+						<option value="confirm"><?php echo esc_html__( 'Confirm selected', 'auto-newsletter' ); ?></option>
+						<option value="delete"><?php echo esc_html__( 'Delete selected', 'auto-newsletter' ); ?></option>
 					</select>
-					<button type="submit" class="button">Použít</button>
+					<button type="submit" class="button"><?php echo esc_html__( 'Apply', 'auto-newsletter' ); ?></button>
 				</div>
 				<br class="clear">
 			</div>
@@ -309,10 +309,10 @@ function auto_newsletter_subscribers_page() {
 				<thead>
 					<tr>
 						<td style="width:30px"><input type="checkbox" id="auto-newsletter-select-all"></td>
-						<th>Email</th>
-						<th>Stav</th>
-						<th>Registrován</th>
-						<th>Akce</th>
+						<th><?php echo esc_html__( 'Email', 'auto-newsletter' ); ?></th>
+						<th><?php echo esc_html__( 'Status', 'auto-newsletter' ); ?></th>
+						<th><?php echo esc_html__( 'Registered', 'auto-newsletter' ); ?></th>
+						<th><?php echo esc_html__( 'Actions', 'auto-newsletter' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -430,45 +430,45 @@ function auto_newsletter_mailer_page() {
 }
 
 /**
- * Stránka Odesílání – testovací email, ruční dávka, fronta.
+ * Send Management - test email, manual batch, queue.
  */
 function auto_newsletter_mailer_send_page() {
 	global $wpdb;
 	?>
 	<div class="wrap">
-		<h1>Správa odesílání</h1>
+		<h1><?php echo esc_html__( 'Send Management', 'auto-newsletter' ); ?></h1>
 
-		<h2>Testovací odeslání</h2>
-		<p>Odešle zkušební email na zadanou adresu s ukázkovým obsahem.</p>
+		<h2><?php echo esc_html__( 'Test Email', 'auto-newsletter' ); ?></h2>
+		<p><?php echo esc_html__( 'Sends a test email to the specified address with sample content.', 'auto-newsletter' ); ?></p>
 		<form method="post">
 			<?php wp_nonce_field( 'auto_newsletter_test_mail' ); ?>
-			<input type="email" name="auto_newsletter_test_email" placeholder="vas@email.cz" required style="width:300px">
-			<button type="submit" name="auto_newsletter_send_test" class="button">Poslat test</button>
+			<input type="email" name="auto_newsletter_test_email" placeholder="your@email.com" required style="width:300px">
+			<button type="submit" name="auto_newsletter_send_test" class="button"><?php echo esc_html__( 'Send Test', 'auto-newsletter' ); ?></button>
 		</form>
 		<?php
 		if ( isset( $_POST['auto_newsletter_send_test'] ) && check_admin_referer( 'auto_newsletter_test_mail' ) ) {
 			$email = sanitize_email( $_POST['auto_newsletter_test_email'] );
 			if ( is_email( $email ) ) {
-				$sent = wp_mail( $email, 'Testovací email – Auto Newsletter', '<h2>Toto je test</h2><p>Pokud vidíte tento email, odesílání funguje.</p>', array( 'Content-Type: text/html; charset=UTF-8' ) );
+				$sent = wp_mail( $email, 'Test email - Auto Newsletter', '<h2>This is a test</h2><p>If you see this email, sending works.</p>', array( 'Content-Type: text/html; charset=UTF-8' ) );
 				if ( $sent ) {
-					echo '<div class="notice notice-success"><p>Testovací email odeslán na ' . esc_html( $email ) . '</p></div>';
+					echo '<div class="notice notice-success"><p>' . esc_html__( 'Test email sent to', 'auto-newsletter' ) . ' ' . esc_html( $email ) . '</p></div>';
 				} else {
-					echo '<div class="notice notice-error"><p>Odeslání selhalo. Zkontroluj WP Mail SMTP nastavení.</p></div>';
+					echo '<div class="notice notice-error"><p>' . esc_html__( 'Sending failed. Check WP Mail SMTP settings.', 'auto-newsletter' ) . '</p></div>';
 				}
 			} else {
-				echo '<div class="notice notice-error"><p>Zadaná e-mailová adresa není platná: ' . esc_html( $_POST['auto_newsletter_test_email'] ) . '</p></div>';
+				echo '<div class="notice notice-error"><p>' . esc_html__( 'Invalid email address:', 'auto-newsletter' ) . ' ' . esc_html( $_POST['auto_newsletter_test_email'] ) . '</p></div>';
 			}
 		}
 		if ( isset( $_POST['auto_newsletter_manual_send'] ) && check_admin_referer( 'auto_newsletter_manual_send' ) ) {
 			auto_newsletter_send_batch();
-			echo '<div class="notice notice-success"><p>Ruční odeslání dokončeno. Zkontroluj e-mail.</p></div>';
+			echo '<div class="notice notice-success"><p>' . esc_html__( 'Manual send completed. Check your email.', 'auto-newsletter' ) . '</p></div>';
 		}
-		// Smazání fronty
+		// Clear queue
 		if ( isset( $_POST['auto_newsletter_clear_queue'] ) && check_admin_referer( 'auto_newsletter_clear_queue' ) ) {
 			$cleared = auto_newsletter_mark_queue_as_done();
-			echo '<div class="notice notice-success"><p>Fronta smazána. Počet záznamů: ' . $cleared . '</p></div>';
+			echo '<div class="notice notice-success"><p>' . sprintf( esc_html__( 'Queue cleared. Records: %d', 'auto-newsletter' ), $cleared ) . '</p></div>';
 		}
-		// Zrušení odeslání jednoho příspěvku z fronty
+		// Cancel single post from queue
 		if ( isset( $_POST['auto_newsletter_clear_single'] ) ) {
 			$cancel_id = (int) $_POST['auto_newsletter_clear_single'];
 			check_admin_referer( 'auto_newsletter_clear_single_' . $cancel_id );
@@ -477,17 +477,17 @@ function auto_newsletter_mailer_send_page() {
 		}
 		?>
 		<hr>
-		<h2>Ruční odeslání dávky</h2>
-		<p>Spustí rozeslání nevyřízených notifikací hned teď (mimo cron).</p>
+		<h2><?php echo esc_html__( 'Manual Batch Send', 'auto-newsletter' ); ?></h2>
+		<p><?php echo esc_html__( 'Sends pending notifications right now (outside of cron).', 'auto-newsletter' ); ?></p>
 		<form method="post">
 			<?php wp_nonce_field( 'auto_newsletter_manual_send' ); ?>
-			<button type="submit" name="auto_newsletter_manual_send" class="button button-primary">Odeslat nevyřízené emaily</button>
+			<button type="submit" name="auto_newsletter_manual_send" class="button button-primary"><?php echo esc_html__( 'Send Pending Emails', 'auto-newsletter' ); ?></button>
 		</form>
 		<hr>
-		<h2>Fronta odesílání</h2>
+		<h2><?php echo esc_html__( 'Send Queue', 'auto-newsletter' ); ?></h2>
 		<?php
 		$queue_pending = get_posts( array(
-			'post_type'      => array( 'clanek', 'dokument', 'akce', 'oznameni', 'dokument_ke_stazeni' ),
+			'post_type'      => array( 'post', 'page' ),
 			'posts_per_page' => 20,
 			'meta_query'     => array( array( 'key' => 'auto_newsletter_mail_sent', 'value' => '0' ) ),
 			'orderby'        => 'date',
@@ -497,15 +497,15 @@ function auto_newsletter_mailer_send_page() {
 			$sub_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}auto_newsletter_subscribers WHERE confirmed=1" );
 			$log_table = $wpdb->prefix . 'auto_newsletter_mail_log';
 			?>
-			<p>Čekající příspěvky (<?php echo count( $queue_pending ); ?>):</p>
+			<p><?php echo sprintf( esc_html__( 'Pending posts (%d):', 'auto-newsletter' ), count( $queue_pending ) ); ?></p>
 			<table class="wp-list-table widefat fixed striped">
 				<thead>
 					<tr>
-						<th>Příspěvek</th>
-						<th>Typ</th>
-						<th>Datum</th>
-						<th>Odesláno / celkem</th>
-						<th>Akce</th>
+						<th><?php echo esc_html__( 'Post', 'auto-newsletter' ); ?></th>
+						<th><?php echo esc_html__( 'Type', 'auto-newsletter' ); ?></th>
+						<th><?php echo esc_html__( 'Date', 'auto-newsletter' ); ?></th>
+						<th><?php echo esc_html__( 'Sent / Total', 'auto-newsletter' ); ?></th>
+						<th><?php echo esc_html__( 'Actions', 'auto-newsletter' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -521,25 +521,25 @@ function auto_newsletter_mailer_send_page() {
 							<td><?php echo get_the_date( 'j. n. Y H:i', $qp->ID ); ?></td>
 							<td><?php echo $already_sent; ?> / <?php echo $sub_count; ?></td>
 							<td>
-								<form method="post" style="margin:0" onsubmit="return confirm('Zrušit zbylé rozesílání tohoto příspěvku? Odběratelé, kteří email ještě nedostali, ho už nedostanou.')">
+								<form method="post" style="margin:0" onsubmit="return confirm('<?php echo esc_js( __( 'Cancel remaining sends for this post? Subscribers who haven\'t received the email yet will not get it.', 'auto-newsletter' ) ); ?>')">
 									<?php wp_nonce_field( 'auto_newsletter_clear_single_' . $qp->ID ); ?>
 									<input type="hidden" name="auto_newsletter_clear_single" value="<?php echo (int) $qp->ID; ?>">
-									<button type="submit" class="button button-small" style="color:#d63638;border-color:#d63638">Zrušit</button>
+									<button type="submit" class="button button-small" style="color:#d63638;border-color:#d63638"><?php echo esc_html__( 'Cancel', 'auto-newsletter' ); ?></button>
 								</form>
 							</td>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-			<form method="post" style="margin-top:10px" onsubmit="return confirm('Opravdu smazat frontu? Odběratelé nedostanou emaily o těchto příspěvcích.')">
+			<form method="post" style="margin-top:10px" onsubmit="return confirm('<?php echo esc_js( __( 'Really clear the queue? Subscribers will not receive emails about these posts.', 'auto-newsletter' ) ); ?>')">
 				<?php wp_nonce_field( 'auto_newsletter_clear_queue' ); ?>
 				<input type="hidden" name="auto_newsletter_clear_queue" value="1">
-				<button type="submit" class="button" style="color:#d63638;border-color:#d63638">Smazat frontu</button>
+				<button type="submit" class="button" style="color:#d63638;border-color:#d63638"><?php echo esc_html__( 'Clear Queue', 'auto-newsletter' ); ?></button>
 			</form>
 		<?php
 		else :
 			?>
-			<p>Žádné čekající příspěvky. Fronta je prázdná.</p>
+			<p><?php echo esc_html__( 'No pending posts. Queue is empty.', 'auto-newsletter' ); ?></p>
 		<?php endif; ?>
 	</div>
 <?php
