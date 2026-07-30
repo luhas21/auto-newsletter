@@ -155,7 +155,7 @@ function auto_newsletter_send_admin_notification( $email, $type ) {
 		$body = "Dobrý den,\n\n"
 			. "Na webu se zaregistroval nový odběratel:\n\n"
 			. "E-mail: $email\n"
-			. "Datum a čas: " . wp_date( 'j. n. Y H:i' ) . "\n"
+			. "Date and time: " . wp_date( 'j. n. Y H:i' ) . "\n"
 			. "Stav: NEPOTVRZENÝ (čeká na double opt-in)\n\n"
 			. "Odběratel ještě nepotvrdil svůj e-mail – registraci bude možné dokončit kliknutím na potvrzovací odkaz.";
 	} else {
@@ -163,7 +163,7 @@ function auto_newsletter_send_admin_notification( $email, $type ) {
 		$body = "Dobrý den,\n\n"
 			. "Odběratel potvrdil svůj e-mail:\n\n"
 			. "E-mail: $email\n"
-			. "Datum a čas potvrzení: " . wp_date( 'j. n. Y H:i' ) . "\n"
+			. "Notification date and time: " . wp_date( 'j. n. Y H:i' ) . "\n"
 			. "Stav: POTVRZENÝ (bude dostávat notifikace o nových příspěvcích)";
 	}
 

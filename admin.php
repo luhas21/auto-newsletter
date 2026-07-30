@@ -578,7 +578,7 @@ function auto_newsletter_mailer_template_page() {
 			<?php settings_fields( 'auto_newsletter_mailer_template' ); ?>
 			<table class="form-table">
 				<tr>
-					<th scope="row">Předmět</th>
+					<th scope="row"><?php echo esc_html__( 'Subject', 'auto-newsletter' ); ?></th>
 					<td>
 						<input type="text" name="auto_newsletter_confirm_subject"
 							value="<?php echo esc_attr( $subject ); ?>" class="regular-text"
@@ -642,7 +642,7 @@ Pokud jste to nebyli Vy, tento e-mail ignorujte.
 					);
 					?>
 					<tr>
-						<th scope="row">Předmět</th>
+						<th scope="row"><?php echo esc_html__( 'Subject', 'auto-newsletter' ); ?></th>
 						<td>
 							<input type="text" name="auto_newsletter_notify_subject"
 								value="<?php echo esc_attr( $notify_subject ); ?>" class="regular-text"
