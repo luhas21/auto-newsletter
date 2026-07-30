@@ -1,0 +1,13 @@
+{
+  "version": "1.0.1",
+  "download_url": "https://updates.sprava-wordpress.cz/updates/auto-newsletter/auto-newsletter-1.0.1.zip",
+  "requires": "5.0",
+  "tested": "6.5",
+  "requires_php": "7.4",
+  "name": "Auto Newsletter",
+  "author": "Petr Sahula",
+  "author_profile": "https://profiles.wordpress.org/petrsahula/",
+  "last_updated": "2024-05-20",
+  "description": "New version with improved batch sending.",
+  "changelog": "<h4>1.0.1</h4><ul><li>Fixed batch sending timing.</li></ul>"
+}

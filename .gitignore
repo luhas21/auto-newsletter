@@ -1,0 +1,16 @@
+# Ignore .env file with sensitive data
+.env
+
+# Ignore system files
+.DS_Store
+*.log
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore build artifacts
+/build/
+/dist/
