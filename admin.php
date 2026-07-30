@@ -586,7 +586,7 @@ function auto_newsletter_mailer_template_page() {
 					</td>
 				</tr>
 				<tr>
-					<th scope="row">Tělo emailu</th>
+					<th scope="row"><?php echo esc_html__('Email body', 'auto-newsletter'); ?></th>
 					<td>
 						<textarea name="auto_newsletter_confirm_body" rows="12" class="large-text"
 							placeholder="Dobrý den,
@@ -650,7 +650,7 @@ Pokud jste to nebyli Vy, tento e-mail ignorujte.
 						</td>
 					</tr>
 					<tr>
-						<th scope="row">Tělo emailu</th>
+						<th scope="row"><?php echo esc_html__('Email body', 'auto-newsletter'); ?></th>
 						<td>
 							<textarea name="auto_newsletter_notify_body" rows="12" class="large-text"
 								placeholder="Dobrý den,
