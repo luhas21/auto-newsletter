@@ -188,7 +188,7 @@ function auto_newsletter_sanitize_notify_emails( $input ) {
 }
 
 // Turnstile klíče – registrovány zvlášť, zobrazeny jen na Import stránce (admin)
-// Vlastní option group, aby se při submiti Nastavení nepřepisovaly a naopak.
+// Vlastní option group, aby se při submiti Settings nepřepisovaly a naopak.
 add_action( 'admin_init', 'auto_newsletter_turnstile_settings' );
 function auto_newsletter_turnstile_settings() {
 	register_setting( 'auto_newsletter_import', 'auto_newsletter_turnstile_site_key' );
@@ -598,25 +598,25 @@ Pro potvrzení klikněte na tento odkaz:
 
 Pokud jste to nebyli Vy, tento e-mail ignorujte.
 
-Děkujeme, tým Web"
+"Thank you, the Web Team"
 						><?php echo esc_textarea( $body ); ?></textarea>
 						<p class="description">
-							Použijte <code>{link}</code> pro potvrzovací odkaz, <code>{email}</code> pro email odběratele.
+							Use <code>{link}</code> for the confirmation link, <code>{email}</code> for the subscriber email.
 							Každý řádek = nový odstavec.
 						</p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row">Hláška po potvrzení</th>
+					<th scope="row">Confirmation message</th>
 					<td>
 						<textarea name="auto_newsletter_confirm_page_msg" rows="3" class="large-text"
-							placeholder="Děkujeme, Váš e-mail byl potvrzen. Budeme Vás informovat o novinkách."
+							placeholder="Thank you, your email has been confirmed. We will keep you updated."
 						><?php echo esc_textarea( $confirm_msg ); ?></textarea>
 					</td>
 				</tr>
 				<tr>
 					<tr>
-						<th scope="row">Hláška po odhlášení</th>
+						<th scope="row">Unsubscription message</th>
 						<td>
 							<textarea name="auto_newsletter_unsub_page_msg" rows="3" class="large-text"
 								placeholder="Byli jste odhlášeni z odběru novinek."><?php echo esc_textarea( $unsub_msg ); ?></textarea>
@@ -782,7 +782,7 @@ function auto_newsletter_import_page() {
 						}
 					}
 					fclose( $handle );
-					echo '<div class="notice notice-success"><p>Import dokončen: <strong>' . $imported . '</strong> importováno, <strong>' . $skipped . '</strong> přeskočeno (duplicity/neplatné).</p></div>';
+					echo '<div class="notice notice-success"><p>Import completed: <strong>' . $imported . '</strong> imported, <strong>' . $skipped . '</strong> skipped (duplicity/neplatné).</p></div>';
 					if ( ! empty( $errors ) ) {
 						echo '<div class="notice notice-warning"><p>Chyby:<br>' . implode( '<br>', $errors ) . '</p></div>';
 					}
