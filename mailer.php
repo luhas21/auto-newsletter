@@ -13,13 +13,13 @@ function auto_newsletter_mailer_get_option( $key, $default ) {
 }
 
 /**
- * Shortcode [obec-odeslat] — formulář pro přihlášení k odběru.
+ * Shortcode [auto_newsletter_form] — formulář pro přihlášení k odběru.
  * Zpracování probíhá v init hooku (viz dole), aby se dalo přesměrovat.
  */
-add_shortcode( 'obec-odeslat', 'auto_newsletter_subscribe_form' );
+add_shortcode( 'auto_newsletter_form', 'auto_newsletter_subscribe_form' );
 function auto_newsletter_subscribe_form( $atts = array() ) {
 	$atts = shortcode_atts( array( 'gdpr_url' => '/gdpr', 'redirect' => '' ), $atts );
-	if ( isset( $_GET['obec_subscribed'] ) || isset( $_GET['obec_error'] ) ) {
+	if ( isset( $_GET['auto_newsletter_subscribed'] ) || isset( $_GET['auto_newsletter_error'] ) ) {
 		return ''; // hláška se zobrazí přes wp_footer jako overlay
 	}
 
@@ -65,7 +65,7 @@ function auto_newsletter_process_subscribe() {
 
 	// --- Nonce (CSRF) – při neplatném jen přesměruj, nedie
 	if ( ! isset( $_POST['obec_subscribe_nonce'] ) || ! wp_verify_nonce( $_POST['obec_subscribe_nonce'], 'obec_subscribe' ) ) {
-		$url = add_query_arg( 'obec_error', 'expired', $base_url );
+		$url = add_query_arg( 'auto_newsletter_error', 'expired', $base_url );
 		wp_safe_redirect( $url );
 		exit;
 	}
@@ -75,7 +75,7 @@ function auto_newsletter_process_subscribe() {
 	$rate_key = 'obec_rate_' . md5( $ip );
 	$attempts = (int) get_transient( $rate_key );
 	if ( $attempts >= 5 ) {
-		$url = add_query_arg( 'obec_error', 'rate_limit', $base_url );
+		$url = add_query_arg( 'auto_newsletter_error', 'rate_limit', $base_url );
 		wp_safe_redirect( $url );
 		exit;
 	}
@@ -94,19 +94,19 @@ function auto_newsletter_process_subscribe() {
 				),
 			) );
 			if ( is_wp_error( $response ) ) {
-				$url = add_query_arg( 'obec_error', 'captcha', $base_url );
+				$url = add_query_arg( 'auto_newsletter_error', 'captcha', $base_url );
 				wp_safe_redirect( $url );
 				exit;
 			}
 			$result = json_decode( wp_remote_retrieve_body( $response ), true );
 			if ( empty( $result['success'] ) ) {
-				$url = add_query_arg( 'obec_error', 'captcha', $base_url );
+				$url = add_query_arg( 'auto_newsletter_error', 'captcha', $base_url );
 				wp_safe_redirect( $url );
 				exit;
 			}
 		} else {
 			// Secret key je nastaven, ale token nepřišel (bot)
-			$url = add_query_arg( 'obec_error', 'captcha', $base_url );
+			$url = add_query_arg( 'auto_newsletter_error', 'captcha', $base_url );
 			wp_safe_redirect( $url );
 			exit;
 		}
@@ -117,21 +117,21 @@ function auto_newsletter_process_subscribe() {
 	if ( is_email( $email ) && ! empty( $_POST['obec_consent'] ) ) {
 		$result = auto_newsletter_add_subscriber( $email );
 		if ( $result === 'exists_confirmed' ) {
-			$url = add_query_arg( 'obec_error', 'exists_confirmed', $base_url );
+			$url = add_query_arg( 'auto_newsletter_error', 'exists_confirmed', $base_url );
 			wp_safe_redirect( $url );
 			exit;
 		}
 		if ( $result === 'exists_unconfirmed' ) {
-			$url = add_query_arg( array( 'obec_error' => 'exists_unconfirmed', 'obec_email' => urlencode( $email ) ), $base_url );
+			$url = add_query_arg( array( 'auto_newsletter_error' => 'exists_unconfirmed', 'obec_email' => urlencode( $email ) ), $base_url );
 			wp_safe_redirect( $url );
 			exit;
 		}
-		$url = $redirect ? $redirect : add_query_arg( 'obec_subscribed', '1', $base_url );
+		$url = $redirect ? $redirect : add_query_arg( 'auto_newsletter_subscribed', '1', $base_url );
 		wp_safe_redirect( $url );
 		exit;
 	}
 	// Chyba: přesměruj zpět s parametrem chyby
-	$url = add_query_arg( 'obec_error', 'invalid', $base_url );
+	$url = add_query_arg( 'auto_newsletter_error', 'invalid', $base_url );
 	wp_safe_redirect( $url );
 	exit;
 }
@@ -221,7 +221,7 @@ function auto_newsletter_resend_confirm() {
 	$base_url = home_url( $_SERVER['REQUEST_URI'] );
 
 	if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'obec_resend' ) ) {
-		$url = add_query_arg( 'obec_error', 'expired', $base_url );
+		$url = add_query_arg( 'auto_newsletter_error', 'expired', $base_url );
 		wp_safe_redirect( $url );
 		exit;
 	}
@@ -308,28 +308,28 @@ function auto_newsletter_show_ok_message() {
 			$icon = '📨';
 		}
 		$clean_url = remove_query_arg( 'obec_ok' );
-	} elseif ( isset( $_GET['obec_subscribed'] ) ) {
+	} elseif ( isset( $_GET['auto_newsletter_subscribed'] ) ) {
 		$msg = 'Děkujeme. Zkontrolujte e-mail a potvrďte odběr.';
-		$clean_url = remove_query_arg( 'obec_subscribed' );
-	} elseif ( isset( $_GET['obec_error'] ) ) {
+		$clean_url = remove_query_arg( 'auto_newsletter_subscribed' );
+	} elseif ( isset( $_GET['auto_newsletter_error'] ) ) {
 		$icon = '⚠️';
-		if ( $_GET['obec_error'] === 'captcha' ) {
+		if ( $_GET['auto_newsletter_error'] === 'captcha' ) {
 			$msg = 'Ověření CAPTCHA selhalo. Zkuste to prosím znovu.';
-		} elseif ( $_GET['obec_error'] === 'exists_confirmed' ) {
+		} elseif ( $_GET['auto_newsletter_error'] === 'exists_confirmed' ) {
 			$msg = 'Tento e-mail je již u nás zaregistrován.';
 			$icon = 'ℹ️';
-		} elseif ( $_GET['obec_error'] === 'exists_unconfirmed' ) {
+		} elseif ( $_GET['auto_newsletter_error'] === 'exists_unconfirmed' ) {
 			$show_resend = true;
 			$icon = 'ℹ️';
 			$msg = 'Tento e-mail je již zaregistrován, ale dosud nebyl potvrzen. Pro dokončení odběru klikněte na odkaz v potvrzovacím emailu, nebo si jej nechte zaslat znovu.';
-		} elseif ( $_GET['obec_error'] === 'expired' ) {
+		} elseif ( $_GET['auto_newsletter_error'] === 'expired' ) {
 			$msg = 'Platnost formuláře vypršela. Zkuste to prosím znovu.';
-		} elseif ( $_GET['obec_error'] === 'rate_limit' ) {
+		} elseif ( $_GET['auto_newsletter_error'] === 'rate_limit' ) {
 			$msg = 'Příliš mnoho pokusů. Zkuste to prosím za chvíli.';
 		} else {
 			$msg = 'Vyplňte e-mail a zaškrtněte souhlas.';
 		}
-		$clean_url = remove_query_arg( array( 'obec_error', 'obec_email' ) );
+		$clean_url = remove_query_arg( array( 'auto_newsletter_error', 'obec_email' ) );
 	}
 
 	if ( ! $msg ) return;
