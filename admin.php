@@ -21,63 +21,67 @@ function auto_newsletter_admin_menu() {
 
 	// Hlavní položka "Mailer"
 	add_menu_page(
-		'Mailer – odběr novinek',
-		'Mailer',
+		__( 'Mailer - Newsletter', 'auto-newsletter' ),
+		__( 'Mailer', 'auto-newsletter' ),
 		$mailer_cap,
 		'auto-newsletter-mailer',
 		'auto_newsletter_mailer_page',
 		'dashicons-email-alt',
 		30
 	);
-	// První submenu se stejným slugem = přejmenuje auto-generated položku na "Nastavení"
+	// První submenu se stejným slugem = přejmenuje auto-generated položku na "Settings"
 	add_submenu_page(
 		'auto-newsletter-mailer',
-		'Newsletter Settings',
-		'Nastavení',
+		__( 'Newsletter Settings', 'auto-newsletter' ),
+		__( 'Settings', 'auto-newsletter' ),
 		$mailer_cap,
 		'auto-newsletter-mailer',
 		'auto_newsletter_mailer_page'
 	);
-	// Správa odesílání (test, ruční dávka, fronta)
+	// Send Management (test, manual batch, queue)
 	add_submenu_page(
 		'auto-newsletter-mailer',
-		'Správa odesílání',
-		'Správa odesílání',
+		__( 'Send Management', 'auto-newsletter' ),
+		__( 'Send Management', 'auto-newsletter' ),
 		$mailer_cap,
 		'auto-newsletter-send',
 		'auto_newsletter_mailer_send_page'
 	);
-	// Historie odesílání
+	// Send History
 	add_submenu_page(
 		'auto-newsletter-mailer',
-		'Historie odesílání',
-		'Historie odesílání',
+		__( 'Send History', 'auto-newsletter' ),
+		__( 'Send History', 'auto-newsletter' ),
 		$mailer_cap,
 		'auto-newsletter-mailer-history',
 		'auto_newsletter_mailer_history_page'
 	);
 	add_submenu_page(
 		'auto-newsletter-mailer',
-		'Subscribers',
-		'Odběratelé',
+		__( 'Subscribers', 'auto-newsletter' ),
+		__( 'Subscribers', 'auto-newsletter' ),
 		$mailer_cap,
 		'auto-newsletter-subscribers',
 		'auto_newsletter_subscribers_page'
 	);
-	// Šablona potvrzovacího emailu
+	// Email Template
 	add_submenu_page(
 		'auto-newsletter-mailer',
-		'Šablona potvrzovacího emailu',
-		'Email šablona',
+		__( 'Email Template', 'auto-newsletter' ),
+		__( 'Email Template', 'auto-newsletter' ),
 		$mailer_cap,
 		'auto-newsletter-mailer-template',
 		'auto_newsletter_mailer_template_page'
 	);
-	// Import / Pokročilé – jen pro administrátory
+	// Import / Advanced - only for admins
 	add_submenu_page(
 		'auto-newsletter-mailer',
-		'Pokročilé nastavení',
-		'Pokročilé',
+		__( 'Advanced Settings', 'auto-newsletter' ),
+		__( 'Advanced', 'auto-newsletter' ),
+		'manage_options',
+		'auto-newsletter-import',
+		'auto_newsletter_import_page'
+	);
 		'manage_options',
 		'auto-newsletter-import',
 		'auto_newsletter_import_page'
