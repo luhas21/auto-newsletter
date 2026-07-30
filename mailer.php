@@ -34,22 +34,22 @@ function auto_newsletter_subscribe_form( $atts = array() ) {
 	}
 
 	return '<form method="post" class="obec-subscribe-form">
-		' . wp_nonce_field( 'obec_subscribe', 'obec_subscribe_nonce', true, false ) . '
-		<input type="hidden" name="obec_gdpr_url" value="' . esc_attr( $atts['gdpr_url'] ) . '">
-		<input type="hidden" name="obec_redirect" value="' . esc_attr( $atts['redirect'] ) . '">
+		' . wp_nonce_field( 'auto_newsletter_subscribe', 'auto_newsletter_subscribe_nonce', true, false ) . '
+		<input type="hidden" name="auto_newsletter_gdpr_url" value="' . esc_attr( $atts['gdpr_url'] ) . '">
+		<input type="hidden" name="auto_newsletter_redirect" value="' . esc_attr( $atts['redirect'] ) . '">
 		<p style="margin:0 0 8px">
-			<input type="email" name="obec_email" placeholder="vas@email.cz" required
+			<input type="email" name="auto_newsletter_email" placeholder="vas@email.cz" required
 				style="box-sizing:border-box;width:100%;padding:8px 10px;border:1px solid #bbb;border-radius:0;">
 		</p>
 		<p style="margin:0 0 10px;font-size:13px;line-height:1.4">
 			<label>
-				<input type="checkbox" name="obec_consent" value="1" required>
+				<input type="checkbox" name="auto_newsletter_consent" value="1" required>
 				Souhlasím se zasíláním novinek na uvedený e-mail. <a href="' . esc_url( $atts['gdpr_url'] ) . '" style="color:#108615">Více o ochraně osobních údajů</a>.
 			</label>
 		</p>
 		' . $turnstile_html . '
 		<p style="margin:0">
-			<input type="submit" name="obec_subscribe" value="Odebírat novinky"
+			<input type="submit" name="auto_newsletter_subscribe" value="Odebírat novinky"
 				style="background:#108615;color:#fff;border:none;padding:8px 20px;cursor:pointer;width:100%;font-size:15px;">
 		</p>
 	</form>';
@@ -58,13 +58,13 @@ function auto_newsletter_subscribe_form( $atts = array() ) {
 /** Zpracování formuláře – brzy (init) kvůli redirectu. */
 add_action( 'init', 'auto_newsletter_process_subscribe' );
 function auto_newsletter_process_subscribe() {
-	if ( ! isset( $_POST['obec_subscribe'] ) || ! isset( $_POST['obec_email'] ) ) return;
+	if ( ! isset( $_POST['auto_newsletter_subscribe'] ) || ! isset( $_POST['auto_newsletter_email'] ) ) return;
 
 	// --- URL pro přesměrování zpět na stránku s formulářem
 	$base_url = home_url( $_SERVER['REQUEST_URI'] );
 
 	// --- Nonce (CSRF) – při neplatném jen přesměruj, nedie
-	if ( ! isset( $_POST['obec_subscribe_nonce'] ) || ! wp_verify_nonce( $_POST['obec_subscribe_nonce'], 'obec_subscribe' ) ) {
+	if ( ! isset( $_POST['auto_newsletter_subscribe_nonce'] ) || ! wp_verify_nonce( $_POST['auto_newsletter_subscribe_nonce'], 'auto_newsletter_subscribe' ) ) {
 		$url = add_query_arg( 'auto_newsletter_error', 'expired', $base_url );
 		wp_safe_redirect( $url );
 		exit;
@@ -72,7 +72,7 @@ function auto_newsletter_process_subscribe() {
 
 	// --- Rate limiting (max 5 pokusů / 60 s na IP)
 	$ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-	$rate_key = 'obec_rate_' . md5( $ip );
+	$rate_key = 'auto_newsletter_rate_' . md5( $ip );
 	$attempts = (int) get_transient( $rate_key );
 	if ( $attempts >= 5 ) {
 		$url = add_query_arg( 'auto_newsletter_error', 'rate_limit', $base_url );
@@ -112,9 +112,9 @@ function auto_newsletter_process_subscribe() {
 		}
 	}
 
-	$email = sanitize_email( $_POST['obec_email'] );
-	$redirect = ! empty( $_POST['obec_redirect'] ) ? esc_url_raw( $_POST['obec_redirect'] ) : '';
-	if ( is_email( $email ) && ! empty( $_POST['obec_consent'] ) ) {
+	$email = sanitize_email( $_POST['auto_newsletter_email'] );
+	$redirect = ! empty( $_POST['auto_newsletter_redirect'] ) ? esc_url_raw( $_POST['auto_newsletter_redirect'] ) : '';
+	if ( is_email( $email ) && ! empty( $_POST['auto_newsletter_consent'] ) ) {
 		$result = auto_newsletter_add_subscriber( $email );
 		if ( $result === 'exists_confirmed' ) {
 			$url = add_query_arg( 'auto_newsletter_error', 'exists_confirmed', $base_url );
@@ -122,7 +122,7 @@ function auto_newsletter_process_subscribe() {
 			exit;
 		}
 		if ( $result === 'exists_unconfirmed' ) {
-			$url = add_query_arg( array( 'auto_newsletter_error' => 'exists_unconfirmed', 'obec_email' => urlencode( $email ) ), $base_url );
+			$url = add_query_arg( array( 'auto_newsletter_error' => 'exists_unconfirmed', 'auto_newsletter_email' => urlencode( $email ) ), $base_url );
 			wp_safe_redirect( $url );
 			exit;
 		}
@@ -194,7 +194,7 @@ function auto_newsletter_add_subscriber( $email ) {
 		. "Děkujeme";
 	$subject = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_subject', $default_subject );
 	$body = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_body', $default_body );
-	$link = add_query_arg( array( 'obec_confirm' => $hash ), home_url() );
+	$link = add_query_arg( array( 'auto_newsletter_confirm' => $hash ), home_url() );
 	$body = str_replace( '{link}', $link, $body );
 	$body = str_replace( '{email}', $email, $body );
 	// Vyrobit HTML – body je plain text, URL v něm jsou {link} nahrazené za URL
@@ -215,12 +215,12 @@ function auto_newsletter_add_subscriber( $email ) {
  */
 add_action( 'init', 'auto_newsletter_resend_confirm' );
 function auto_newsletter_resend_confirm() {
-	if ( ! isset( $_POST['obec_resend'] ) || ! isset( $_POST['obec_email'] ) ) return;
+	if ( ! isset( $_POST['auto_newsletter_resend'] ) || ! isset( $_POST['auto_newsletter_email'] ) ) return;
 
 	// URL pro přesměrování zpět na stránku s formulářem
 	$base_url = home_url( $_SERVER['REQUEST_URI'] );
 
-	if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'obec_resend' ) ) {
+	if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'auto_newsletter_resend' ) ) {
 		$url = add_query_arg( 'auto_newsletter_error', 'expired', $base_url );
 		wp_safe_redirect( $url );
 		exit;
@@ -228,7 +228,7 @@ function auto_newsletter_resend_confirm() {
 
 	global $wpdb;
 	$table = $wpdb->prefix . 'auto_newsletter_subscribers';
-	$email = sanitize_email( $_POST['obec_email'] );
+	$email = sanitize_email( $_POST['auto_newsletter_email'] );
 	$sub = $wpdb->get_row( $wpdb->prepare( "SELECT hash, confirmed FROM $table WHERE email=%s", $email ) );
 	if ( ! $sub || $sub->confirmed ) {
 		return;
@@ -243,14 +243,14 @@ function auto_newsletter_resend_confirm() {
 		. "Děkujeme, tým našeho webu";
 	$subject = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_subject', $default_subject );
 	$body = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_body', $default_body );
-	$link = add_query_arg( array( 'obec_confirm' => $sub->hash ), home_url() );
+	$link = add_query_arg( array( 'auto_newsletter_confirm' => $sub->hash ), home_url() );
 	$body = str_replace( '{link}', $link, $body );
 	$body = str_replace( '{email}', $email, $body );
 	$body_html = '<p>' . str_replace( "\n\n", '</p><p>', nl2br( esc_html( $body ) ) ) . '</p>';
 	$body_html = make_clickable( $body_html );
 	wp_mail( $email, $subject, $body_html, array( 'Content-Type: text/html; charset=UTF-8' ) );
 
-	$url = add_query_arg( 'obec_ok', 'resent', $base_url );
+	$url = add_query_arg( 'auto_newsletter_ok', 'resent', $base_url );
 	wp_safe_redirect( $url );
 	exit;
 }
@@ -266,8 +266,8 @@ function auto_newsletter_handle_links() {
 		return;
 	}
 
-	if ( isset( $_GET['obec_confirm'] ) ) {
-		$hash = sanitize_text_field( $_GET['obec_confirm'] );
+	if ( isset( $_GET['auto_newsletter_confirm'] ) ) {
+		$hash = sanitize_text_field( $_GET['auto_newsletter_confirm'] );
 		$wpdb->update( $table, array( 'confirmed' => 1 ), array( 'hash' => $hash ) );
 
 		// Notifikace adminovi o potvrzeném odběrateli
@@ -278,13 +278,13 @@ function auto_newsletter_handle_links() {
 			}
 		}
 
-		wp_safe_redirect( home_url( '?obec_ok=confirm' ) );
+		wp_safe_redirect( home_url( '?auto_newsletter_ok=confirm' ) );
 		exit;
 	}
-	if ( isset( $_GET['obec_unsub'] ) ) {
-		$hash = sanitize_text_field( $_GET['obec_unsub'] );
+	if ( isset( $_GET['auto_newsletter_unsub'] ) ) {
+		$hash = sanitize_text_field( $_GET['auto_newsletter_unsub'] );
 		$wpdb->delete( $table, array( 'hash' => $hash ) );
-		wp_safe_redirect( home_url( '?obec_ok=unsub' ) );
+		wp_safe_redirect( home_url( '?auto_newsletter_ok=unsub' ) );
 		exit;
 	}
 }
@@ -297,17 +297,17 @@ function auto_newsletter_show_ok_message() {
 	$clean_url = '';
 	$show_resend = false;
 
-	if ( isset( $_GET['obec_ok'] ) ) {
-		if ( $_GET['obec_ok'] === 'confirm' ) {
+	if ( isset( $_GET['auto_newsletter_ok'] ) ) {
+		if ( $_GET['auto_newsletter_ok'] === 'confirm' ) {
 			$msg = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_page_msg', 'Děkujeme, Váš e-mail byl potvrzen. Budeme Vás informovat o novinkách.' );
-		} elseif ( $_GET['obec_ok'] === 'unsub' ) {
+		} elseif ( $_GET['auto_newsletter_ok'] === 'unsub' ) {
 			$msg = auto_newsletter_mailer_get_option( 'auto_newsletter_unsub_page_msg', 'Byli jste odhlášeni z odběru novinek.' );
 			$icon = '👋';
-		} elseif ( $_GET['obec_ok'] === 'resent' ) {
+		} elseif ( $_GET['auto_newsletter_ok'] === 'resent' ) {
 			$msg = 'Potvrzovací email byl znovu odeslán. Zkontrolujte svou e-mailovou schránku.';
 			$icon = '📨';
 		}
-		$clean_url = remove_query_arg( 'obec_ok' );
+		$clean_url = remove_query_arg( 'auto_newsletter_ok' );
 	} elseif ( isset( $_GET['auto_newsletter_subscribed'] ) ) {
 		$msg = 'Děkujeme. Zkontrolujte e-mail a potvrďte odběr.';
 		$clean_url = remove_query_arg( 'auto_newsletter_subscribed' );
@@ -329,7 +329,7 @@ function auto_newsletter_show_ok_message() {
 		} else {
 			$msg = 'Vyplňte e-mail a zaškrtněte souhlas.';
 		}
-		$clean_url = remove_query_arg( array( 'auto_newsletter_error', 'obec_email' ) );
+		$clean_url = remove_query_arg( array( 'auto_newsletter_error', 'auto_newsletter_email' ) );
 	}
 
 	if ( ! $msg ) return;
@@ -339,11 +339,11 @@ function auto_newsletter_show_ok_message() {
 			<button onclick="document.getElementById('obec-modal-overlay').remove()" style="position:absolute;top:8px;right:12px;background:none;border:none;font-size:22px;cursor:pointer;color:#888;line-height:1;">&times;</button>
 			<p style="margin:0 0 6px;font-size:36px;"><?php echo $icon; ?></p>
 			<p style="margin:0;font-size:16px;line-height:1.5;color:#333;"><?php echo esc_html( $msg ); ?></p>
-<?php if ( ! empty( $show_resend ) && ! empty( $_GET['obec_email'] ) ) : ?>
+<?php if ( ! empty( $show_resend ) && ! empty( $_GET['auto_newsletter_email'] ) ) : ?>
 			<form method="post" style="margin:16px 0 0">
-				<?php wp_nonce_field( 'obec_resend' ); ?>
-				<input type="hidden" name="obec_resend" value="1">
-				<input type="hidden" name="obec_email" value="<?php echo esc_attr( sanitize_email( $_GET['obec_email'] ) ); ?>">
+				<?php wp_nonce_field( 'auto_newsletter_resend' ); ?>
+				<input type="hidden" name="auto_newsletter_resend" value="1">
+				<input type="hidden" name="auto_newsletter_email" value="<?php echo esc_attr( sanitize_email( $_GET['auto_newsletter_email'] ) ); ?>">
 				<button type="submit" style="background:#108615;color:#fff;border:none;padding:8px 24px;cursor:pointer;font-size:14px;border-radius:3px;">Zaslat potvrzovací email znovu</button>
 			</form>
 <?php endif; ?>
@@ -366,7 +366,7 @@ function auto_newsletter_show_ok_message() {
 }
 
 /**
- * Označí všechny aktuálně čekající příspěvky (obec_mail_sent='0') jako odeslané –
+ * Označí všechny aktuálně čekající příspěvky (auto_newsletter_mail_sent='0') jako odeslané –
  * nic tím reálně neodešle, jen zastaví jejich další zpracování cronem. Používá se
  * výhradně z tlačítka "Smazat frontu" v adminu – čistě ruční akce, žádný hook
  * (např. aktivace pluginu) ji nespouští automaticky, aby ji nemohl bez vědomí
@@ -377,7 +377,7 @@ function auto_newsletter_mark_queue_as_done() {
 	global $wpdb;
 	return (int) $wpdb->query( $wpdb->prepare(
 		"UPDATE {$wpdb->postmeta} SET meta_value=%s WHERE meta_key=%s AND meta_value=%s",
-		'1', 'obec_mail_sent', '0'
+		'1', 'auto_newsletter_mail_sent', '0'
 	) );
 }
 
@@ -388,12 +388,12 @@ add_action( 'transition_post_status', 'auto_newsletter_on_publish', 10, 3 );
 function auto_newsletter_on_publish( $new, $old, $post ) {
 	if ( $new !== 'publish' || $old === 'publish' ) return;
 	if ( ! in_array( $post->post_type, array( 'clanek', 'dokument', 'akce', 'oznameni', 'dokument_ke_stazeni' ) ) ) return;
-	if ( get_post_meta( $post->ID, 'obec_skip_mail', true ) ) return;
+	if ( get_post_meta( $post->ID, 'auto_newsletter_skip_mail', true ) ) return;
 	// Pokud je mailer vypnutý, vůbec neznačkovat – nic se nehromadí
 	if ( get_option( 'auto_newsletter_mailer_enabled', '1' ) !== '1' ) return;
 
-	// označit k rozeslání (mailer cron najde přes meta obec_mail_sent)
-	update_post_meta( $post->ID, 'obec_mail_sent', 0 );
+	// označit k rozeslání (mailer cron najde přes meta auto_newsletter_mail_sent)
+	update_post_meta( $post->ID, 'auto_newsletter_mail_sent', 0 );
 }
 
 /**
@@ -402,7 +402,7 @@ function auto_newsletter_on_publish( $new, $old, $post ) {
 /**
  * Pošle až $limit e-mailů k danému postu těm odběratelům, kteří ho ještě
  * nedostali (podle wp_auto_newsletter_mail_log), a zaloguje odeslání. Pokud po
- * tomto běhu nezbývá nikdo, nastaví obec_mail_sent na 1. Vrací počet
+ * tomto běhu nezbývá nikdo, nastaví auto_newsletter_mail_sent na 1. Vrací počet
  * odeslaných a počet zbývajících (pro zobrazení fronty v adminu).
  */
 function auto_newsletter_send_post_batch( $post, $limit ) {
@@ -434,7 +434,7 @@ function auto_newsletter_send_post_batch( $post, $limit ) {
 		$post->ID
 	) );
 	if ( $remaining === 0 ) {
-		update_post_meta( $post->ID, 'obec_mail_sent', 1 );
+		update_post_meta( $post->ID, 'auto_newsletter_mail_sent', 1 );
 	}
 	return array( 'sent' => isset( $subs ) ? count( $subs ) : 0, 'remaining' => $remaining );
 }
@@ -446,7 +446,7 @@ function auto_newsletter_send_batch() {
 	$pending = get_posts( array(
 		'post_type'      => array( 'clanek', 'dokument', 'akce', 'oznameni', 'dokument_ke_stazeni' ),
 		'posts_per_page' => 20,
-		'meta_query'     => array( array( 'key' => 'obec_mail_sent', 'value' => '0' ) ),
+		'meta_query'     => array( array( 'key' => 'auto_newsletter_mail_sent', 'value' => '0' ) ),
 		// ASC – dokonči nejdřív příspěvek, co čeká nejdéle, než začne sdílený rozpočet
 		// čerpat novější příspěvek. Jinak by novější mohl "předběhnout" ve frontě starší,
 		// ještě nedokončený, a ten by se dorozesílal jen kouskem zbylého rozpočtu.
@@ -472,7 +472,7 @@ function auto_newsletter_send_one( $email, $post, $hash ) {
 	$title_plain = wp_specialchars_decode( get_the_title( $post ), ENT_QUOTES );
 	$excerpt     = get_the_excerpt( $post );
 	$url         = get_permalink( $post );
-	$unsub_url   = $hash ? add_query_arg( array( 'obec_unsub' => $hash ), home_url() ) : '';
+	$unsub_url   = $hash ? add_query_arg( array( 'auto_newsletter_unsub' => $hash ), home_url() ) : '';
 
 	// Metadata – typ, datum (jen akce), kategorie
 	$post_type = get_post_type( $post );
@@ -584,7 +584,7 @@ function auto_newsletter_send_one( $email, $post, $hash ) {
 * Zařadí notifikaci o konkrétním příspěvku do fronty — z tlačítka "Odeslat notifikaci" /
 * "Zařadit do fronty" / "Odeslat znovu" v meta boxu při editaci příspěvku.
 *
-* Neposílá nic hned. Jen nastaví obec_mail_sent na 0 (a při $force_resend smaže log
+* Neposílá nic hned. Jen nastaví auto_newsletter_mail_sent na 0 (a při $force_resend smaže log
 * předchozího odeslání, takže se pošle znovu úplně od začátku). Samotné odeslání pak
 * provede až následující cron tik – ve stejném pořadí a se stejným sdíleným rozpočtem
 * jako všechny ostatní čekající příspěvky, takže se nemůže "předběhnout" fronta.
@@ -598,5 +598,5 @@ function auto_newsletter_send_single_post( $post_id, $force_resend = false ) {
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . 'auto_newsletter_mail_log', array( 'post_id' => $post_id ) );
 	}
-	update_post_meta( $post_id, 'obec_mail_sent', 0 );
+	update_post_meta( $post_id, 'auto_newsletter_mail_sent', 0 );
 }
