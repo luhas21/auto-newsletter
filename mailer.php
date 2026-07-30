@@ -186,12 +186,12 @@ function auto_newsletter_add_subscriber( $email ) {
 	) );
 
 	// potvrzovací mail (šablona z administrace)
-	$default_subject = 'Potvrďte odběr novinek z Hlinné';
-	$default_body = "Dobrý den,\n\n"
-		. "právě jste se přihlásili k odběru novinek z webu Hlinná.\n\n"
-		. "Pro potvrzení klikněte na tento odkaz:\n{link}\n\n"
-		. "Pokud jste to nebyli Vy, tento e-mail ignorujte.\n\n"
-		. "Děkujeme, tým Hlinná";
+	$default_subject = 'Potvrďte odběr novinek';
+	$default_body = "Dobrý den,\\n\\n"
+		. "právě jste se přihlásili k odběru novinek z našeho webu.\\n\\n"
+		. "Pro potvrzení klikněte na tento odkaz:\\n{link}\\n\\n"
+		. "Pokud jste to nebyli Vy, tento e-mail ignorujte.\\n\\n"
+		. "Děkujeme";
 	$subject = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_subject', $default_subject );
 	$body = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_body', $default_body );
 	$link = add_query_arg( array( 'obec_confirm' => $hash ), home_url() );
@@ -235,12 +235,12 @@ function auto_newsletter_resend_confirm() {
 	}
 
 	// Odeslat potvrzovací mail znovu
-	$default_subject = 'Potvrďte odběr novinek z Hlinné';
+	$default_subject = 'Potvrďte odběr novinek z našeho webu';
 	$default_body = "Dobrý den,\n\n"
-		. "právě jste se přihlásili k odběru novinek z webu Hlinná.\n\n"
+		. "právě jste se přihlásili k odběru novinek z webu našeho webu.\n\n"
 		. "Pro potvrzení klikněte na tento odkaz:\n{link}\n\n"
 		. "Pokud jste to nebyli Vy, tento e-mail ignorujte.\n\n"
-		. "Děkujeme, tým Hlinná";
+		. "Děkujeme, tým našeho webu";
 	$subject = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_subject', $default_subject );
 	$body = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_body', $default_body );
 	$link = add_query_arg( array( 'obec_confirm' => $sub->hash ), home_url() );
@@ -466,7 +466,7 @@ function auto_newsletter_send_batch() {
 function auto_newsletter_send_one( $email, $post, $hash ) {
 	$template_subject = auto_newsletter_mailer_get_option(
 		'auto_newsletter_notify_subject',
-		'🔔 Novinka na webu Hlinná: {title}'
+		'🔔 Novinka na webu našeho webu: {title}'
 	);
 
 	$title_plain = wp_specialchars_decode( get_the_title( $post ), ENT_QUOTES );
@@ -550,7 +550,7 @@ function auto_newsletter_send_one( $email, $post, $hash ) {
 
 	// Úvod
 	$body_html .= '<p style="margin:0 0 16px">Dobrý den,</p>';
-	$body_html .= '<p style="margin:0 0 16px">na webu Hlinná byl právě zveřejněn nový příspěvek:</p>';
+	$body_html .= '<p style="margin:0 0 16px">na webu našeho webu byl právě zveřejněn nový příspěvek:</p>';
 
 	// Název (větší, níž)
 	$body_html .= '<div style="margin:16px 0 4px"><a href="' . esc_url( $url ) . '" style="color:#108615;font-size:22px;font-weight:bold;text-decoration:none">'
