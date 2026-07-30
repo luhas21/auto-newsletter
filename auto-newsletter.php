@@ -19,7 +19,7 @@ define( 'AUTO_NEWSLETTER_URL', plugin_dir_url( __FILE__ ) );
 // Vlastní updater (pouze pro development/testování, pokud je povoleno v wp-config.php)
 // Konfigurace: definujte v wp-config.php:
 // define( 'AUTO_NEWSLETTER_DEV_UPDATER', true );
-// define( 'AUTO_NEWSLETTER_UPDATE_URL', 'https://updates.sprava-wordpress.cz/updates/auto-newsletter/update.json' );
+// define( 'AUTO_NEWSLETTER_UPDATE_URL', 'https://updates.yourdomain.com/updates/auto-newsletter/update.json' );
 if ( defined( 'AUTO_NEWSLETTER_DEV_UPDATER' ) && AUTO_NEWSLETTER_DEV_UPDATER ) {
 	$update_url = defined( 'AUTO_NEWSLETTER_UPDATE_URL' ) ? AUTO_NEWSLETTER_UPDATE_URL : '';
 	if ( ! empty( $update_url ) ) {
