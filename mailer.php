@@ -566,12 +566,12 @@ function auto_newsletter_send_one( $email, $post, $hash ) {
 
 	// Patička (14px, obě věty)
 	$body_html .= '<div style="font-size:14px;color:#666;margin-top:16px;padding-top:12px;border-top:1px solid #eee">';
-	$body_html .= 'Tento e-mail jste dostali, protože jste přihlášeni k odběru novinek.<br>';
-	$body_html .= 'Pokud si nepřejete dostávat další e-maily, ';
+	$body_html .= 'You received this email because you are subscribed to the newsletter.<br>';
+	$body_html .= 'If you do not wish to receive further emails, ';
 	if ( $unsub_url ) {
-		$body_html .= '<a href="' . esc_url( $unsub_url ) . '" style="color:#108615">odhlásit odběr</a>.';
+		$body_html .= '<a href="' . esc_url( $unsub_url ) . '" style="color:#108615">unsubscribe</a>.';
 	} else {
-		$body_html .= 'odhlásit odběr.';
+		$body_html .= 'unsubscribe.';
 	}
 	$body_html .= '</div>';
 
