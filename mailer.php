@@ -33,23 +33,23 @@ function auto_newsletter_subscribe_form( $atts = array() ) {
 		</p>';
 	}
 
-	return '<form method="post" class="obec-subscribe-form">
+	return '<form method="post" class="auto-newsletter-form">
 		' . wp_nonce_field( 'auto_newsletter_subscribe', 'auto_newsletter_subscribe_nonce', true, false ) . '
 		<input type="hidden" name="auto_newsletter_gdpr_url" value="' . esc_attr( $atts['gdpr_url'] ) . '">
 		<input type="hidden" name="auto_newsletter_redirect" value="' . esc_attr( $atts['redirect'] ) . '">
 		<p style="margin:0 0 8px">
-			<input type="email" name="auto_newsletter_email" placeholder="vas@email.cz" required
+			<input type="email" name="auto_newsletter_email" placeholder="your@email.com" required
 				style="box-sizing:border-box;width:100%;padding:8px 10px;border:1px solid #bbb;border-radius:0;">
 		</p>
 		<p style="margin:0 0 10px;font-size:13px;line-height:1.4">
 			<label>
 				<input type="checkbox" name="auto_newsletter_consent" value="1" required>
-				Souhlasím se zasíláním novinek na uvedený e-mail. <a href="' . esc_url( $atts['gdpr_url'] ) . '" style="color:#108615">Více o ochraně osobních údajů</a>.
+				I agree to receive news to the provided email. <a href="' . esc_url( $atts['gdpr_url'] ) . '" style="color:#108615">Privacy Policy</a>.
 			</label>
 		</p>
 		' . $turnstile_html . '
 		<p style="margin:0">
-			<input type="submit" name="auto_newsletter_subscribe" value="Odebírat novinky"
+			<input type="submit" name="auto_newsletter_subscribe" value="Subscribe"
 				style="background:#108615;color:#fff;border:none;padding:8px 20px;cursor:pointer;width:100%;font-size:15px;">
 		</p>
 	</form>';
@@ -186,12 +186,12 @@ function auto_newsletter_add_subscriber( $email ) {
 	) );
 
 	// potvrzovací mail (šablona z administrace)
-	$default_subject = 'Potvrďte odběr novinek';
+	$default_subject = 'Confirm your subscription';
 	$default_body = "Dobrý den,\\n\\n"
 		. "právě jste se přihlásili k odběru novinek z našeho webu.\\n\\n"
 		. "Pro potvrzení klikněte na tento odkaz:\\n{link}\\n\\n"
 		. "Pokud jste to nebyli Vy, tento e-mail ignorujte.\\n\\n"
-		. "Děkujeme";
+		. "Thank you";
 	$subject = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_subject', $default_subject );
 	$body = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_body', $default_body );
 	$link = add_query_arg( array( 'auto_newsletter_confirm' => $hash ), home_url() );
@@ -235,12 +235,12 @@ function auto_newsletter_resend_confirm() {
 	}
 
 	// Odeslat potvrzovací mail znovu
-	$default_subject = 'Potvrďte odběr novinek z našeho webu';
+	$default_subject = 'Confirm your subscription z našeho webu';
 	$default_body = "Dobrý den,\n\n"
 		. "právě jste se přihlásili k odběru novinek z webu našeho webu.\n\n"
 		. "Pro potvrzení klikněte na tento odkaz:\n{link}\n\n"
 		. "Pokud jste to nebyli Vy, tento e-mail ignorujte.\n\n"
-		. "Děkujeme, tým našeho webu";
+		. "Thank you, our team";
 	$subject = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_subject', $default_subject );
 	$body = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_body', $default_body );
 	$link = add_query_arg( array( 'auto_newsletter_confirm' => $sub->hash ), home_url() );
@@ -299,33 +299,33 @@ function auto_newsletter_show_ok_message() {
 
 	if ( isset( $_GET['auto_newsletter_ok'] ) ) {
 		if ( $_GET['auto_newsletter_ok'] === 'confirm' ) {
-			$msg = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_page_msg', 'Děkujeme, Váš e-mail byl potvrzen. Budeme Vás informovat o novinkách.' );
+			$msg = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_page_msg', 'Thank you, your email has been confirmed. We will keep you updated on new posts.' );
 		} elseif ( $_GET['auto_newsletter_ok'] === 'unsub' ) {
-			$msg = auto_newsletter_mailer_get_option( 'auto_newsletter_unsub_page_msg', 'Byli jste odhlášeni z odběru novinek.' );
+			$msg = auto_newsletter_mailer_get_option( 'auto_newsletter_unsub_page_msg', 'You have been unsubscribed from the newsletter.' );
 			$icon = '👋';
 		} elseif ( $_GET['auto_newsletter_ok'] === 'resent' ) {
-			$msg = 'Potvrzovací email byl znovu odeslán. Zkontrolujte svou e-mailovou schránku.';
+			$msg = 'Confirmation email has been resent. Please check your inbox.';
 			$icon = '📨';
 		}
 		$clean_url = remove_query_arg( 'auto_newsletter_ok' );
 	} elseif ( isset( $_GET['auto_newsletter_subscribed'] ) ) {
-		$msg = 'Děkujeme. Zkontrolujte e-mail a potvrďte odběr.';
+		$msg = 'Thank you. Please check your email and confirm your subscription.';
 		$clean_url = remove_query_arg( 'auto_newsletter_subscribed' );
 	} elseif ( isset( $_GET['auto_newsletter_error'] ) ) {
 		$icon = '⚠️';
 		if ( $_GET['auto_newsletter_error'] === 'captcha' ) {
-			$msg = 'Ověření CAPTCHA selhalo. Zkuste to prosím znovu.';
+			$msg = 'CAPTCHA verification failed. Please try again.';
 		} elseif ( $_GET['auto_newsletter_error'] === 'exists_confirmed' ) {
-			$msg = 'Tento e-mail je již u nás zaregistrován.';
+			$msg = 'This email is already registered.';
 			$icon = 'ℹ️';
 		} elseif ( $_GET['auto_newsletter_error'] === 'exists_unconfirmed' ) {
 			$show_resend = true;
 			$icon = 'ℹ️';
-			$msg = 'Tento e-mail je již zaregistrován, ale dosud nebyl potvrzen. Pro dokončení odběru klikněte na odkaz v potvrzovacím emailu, nebo si jej nechte zaslat znovu.';
+			$msg = 'This email is already registered but not yet confirmed. Please click the link in the confirmation email or request a new one.';
 		} elseif ( $_GET['auto_newsletter_error'] === 'expired' ) {
-			$msg = 'Platnost formuláře vypršela. Zkuste to prosím znovu.';
+			$msg = 'Form expired. Please try again.';
 		} elseif ( $_GET['auto_newsletter_error'] === 'rate_limit' ) {
-			$msg = 'Příliš mnoho pokusů. Zkuste to prosím za chvíli.';
+			$msg = 'Too many attempts. Please try again later.';
 		} else {
 			$msg = 'Vyplňte e-mail a zaškrtněte souhlas.';
 		}
