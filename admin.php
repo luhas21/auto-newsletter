@@ -82,10 +82,6 @@ function auto_newsletter_admin_menu() {
 		'auto-newsletter-import',
 		'auto_newsletter_import_page'
 	);
-		'manage_options',
-		'auto-newsletter-import',
-		'auto_newsletter_import_page'
-	);
 }
 
 // ---- Historie odesílání ----
