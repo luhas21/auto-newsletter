@@ -16,6 +16,15 @@ define( 'AUTO_NEWSLETTER_VERSION', '1.0.0' );
 define( 'AUTO_NEWSLETTER_PATH', plugin_dir_path( __FILE__ ) );
 define( 'AUTO_NEWSLETTER_URL', plugin_dir_url( __FILE__ ) );
 
+// Vlastní updater (pouze pro development/testování, pokud je povoleno v wp-config.php)
+if ( defined( 'AUTO_NEWSLETTER_DEV_UPDATER' ) && AUTO_NEWSLETTER_DEV_UPDATER ) {
+	require_once AUTO_NEWSLETTER_PATH . 'updater.php';
+	new Auto_Newsletter_Updater(
+		__FILE__,
+		'https://updates.sprava-wordpress.cz/updates/auto-newsletter/update.json'
+	);
+}
+
 /**
  * Plugin i administrace používají emoji v textech (✅, ⏳, 🔔 ...). WP core je
  * jinak nahrazuje obrázky z externí CDN (jsdelivr.net/twemoji) kvůli sjednocení
