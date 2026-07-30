@@ -101,19 +101,19 @@ function auto_newsletter_mailer_history_page() {
 	);
 	?>
 	<div class="wrap">
-		<h1>Historie odesílání</h1>
+		<h1><?php echo esc_html__( 'Send History', 'auto-newsletter' ); ?></h1>
 		<?php if ( empty( $rows ) ) : ?>
-			<p>Zatím nebyl odeslán žádný email.</p>
+			<p><?php echo esc_html__( 'No emails have been sent yet.', 'auto-newsletter' ); ?></p>
 		<?php else : ?>
 			<table class="wp-list-table widefat fixed striped">
 				<thead>
 					<tr>
-						<th>Příspěvek</th>
-						<th>Typ</th>
-						<th>Odesláno</th>
-						<th>První odeslání</th>
-						<th>Poslední odeslání</th>
-						<th>Stav</th>
+						<th><?php echo esc_html__( 'Post', 'auto-newsletter' ); ?></th>
+						<th><?php echo esc_html__( 'Type', 'auto-newsletter' ); ?></th>
+						<th><?php echo esc_html__( 'Sent', 'auto-newsletter' ); ?></th>
+						<th><?php echo esc_html__( 'First sent', 'auto-newsletter' ); ?></th>
+						<th><?php echo esc_html__( 'Last sent', 'auto-newsletter' ); ?></th>
+						<th><?php echo esc_html__( 'Status', 'auto-newsletter' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -122,8 +122,8 @@ function auto_newsletter_mailer_history_page() {
 						if ( ! $post ) continue;
 						$mail_sent = get_post_meta( $post->ID, 'auto_newsletter_mail_sent', true );
 						$status = ( $mail_sent === '1' )
-							? '✅ Dokončeno'
-							: '⏳ Probíhá (' . (int) $row->sent_count . '/' . $sub_count . ')';
+							? '✅ ' . esc_html__( 'Completed', 'auto-newsletter' )
+							: '⏳ ' . sprintf( esc_html__( 'In progress (%d/%d)', 'auto-newsletter' ), (int) $row->sent_count, $sub_count );
 						?>
 						<tr>
 							<td><a href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>"><?php echo esc_html( get_the_title( $post ) ); ?></a></td>
@@ -136,7 +136,7 @@ function auto_newsletter_mailer_history_page() {
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-			<p class="description">Zobrazeno posledních 100 rozeslaných příspěvků.</p>
+			<p class="description"><?php echo esc_html__( 'Showing last 100 sent posts.', 'auto-newsletter' ); ?></p>
 		<?php endif; ?>
 	</div>
 	<?php
@@ -327,17 +327,17 @@ function auto_newsletter_subscribers_page() {
 							<td><?php echo esc_html( $s->email ); ?></td>
 							<td>
 								<?php if ( $s->confirmed ) : ?>
-									<span style="color:green">Potvrzený</span>
+									<span style="color:green"><?php echo esc_html__( 'Confirmed', 'auto-newsletter' ); ?></span>
 								<?php else : ?>
-									<span style="color:#d63638">Nepotvrzený</span>
+									<span style="color:#d63638"><?php echo esc_html__( 'Unconfirmed', 'auto-newsletter' ); ?></span>
 								<?php endif; ?>
 							</td>
 							<td><?php echo esc_html( $s->created_at ? date_i18n( 'j. n. Y H:i', strtotime( $s->created_at ) ) : '—' ); ?></td>
-							<td><a href="<?php echo esc_url( $delete_url ); ?>" style="color:#d63638" onclick="return confirm('Smazat tohoto odběratele?')">Smazat</a></td>
+							<td><a href="<?php echo esc_url( $delete_url ); ?>" style="color:#d63638" onclick="return confirm('<?php echo esc_js( __( 'Delete this subscriber?', 'auto-newsletter' ) ); ?>')"><?php echo esc_html__( 'Delete', 'auto-newsletter' ); ?></a></td>
 						</tr>
 					<?php endforeach; ?>
 				<?php else : ?>
-					<tr><td colspan="5">Žádní odběratelé.</td></tr>
+					<tr><td colspan="5"><?php echo esc_html__( 'No subscribers found.', 'auto-newsletter' ); ?></td></tr>
 				<?php endif; ?>
 				</tbody>
 			</table>
@@ -561,19 +561,19 @@ function auto_newsletter_confirm_template_settings() {
 	register_setting( 'auto_newsletter_mailer_template', 'auto_newsletter_notify_body' );
 }
 function auto_newsletter_mailer_template_page() {
-	$default_subject = 'Potvrďte odběr novinek z Webu';
-	$default_body = "Dobrý den,\n\n"
-		. "právě jste se přihlásili k odběru novinek z webu Web.\n\n"
-		. "Pro potvrzení klikněte na tento odkaz:\n{link}\n\n"
-		. "Pokud jste to nebyli Vy, tento e-mail ignorujte.\n\n"
-		. "Děkujeme, tým Web";
+	$default_subject = 'Confirm your subscription';
+	$default_body = "Hello,\\n\\n"
+			. "you have just subscribed to news from our website.\\n\\n"
+			. "Click this link to confirm:\\n{link}\\n\\n"
+			. "If this wasn't you, ignore this email.\\n\\n"
+			. "Thank you, team";
 	$subject = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_subject', $default_subject );
 	$body = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_body', $default_body );
-	$confirm_msg = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_page_msg', 'Děkujeme, Váš e-mail byl potvrzen. Budeme Vás informovat o novinkách.' );
-	$unsub_msg = auto_newsletter_mailer_get_option( 'auto_newsletter_unsub_page_msg', 'Byli jste odhlášeni z odběru novinek.' );
+	$confirm_msg = auto_newsletter_mailer_get_option( 'auto_newsletter_confirm_page_msg', 'Thank you, your email has been confirmed. We will keep you updated on new posts.' );
+	$unsub_msg = auto_newsletter_mailer_get_option( 'auto_newsletter_unsub_page_msg', 'You have been unsubscribed from the newsletter.' );
 	?>
 	<div class="wrap">
-		<h1>Šablona potvrzovacího emailu</h1>
+		<h1><?php echo esc_html__( 'Email Template', 'auto-newsletter' ); ?></h1>
 		<form method="post" action="options.php">
 			<?php settings_fields( 'auto_newsletter_mailer_template' ); ?>
 			<table class="form-table">
@@ -582,7 +582,7 @@ function auto_newsletter_mailer_template_page() {
 					<td>
 						<input type="text" name="auto_newsletter_confirm_subject"
 							value="<?php echo esc_attr( $subject ); ?>" class="regular-text"
-							placeholder="Např. Potvrďte odběr novinek z Webu">
+							placeholder="Např. Confirm your subscription">
 					</td>
 				</tr>
 				<tr>
@@ -624,13 +624,13 @@ Děkujeme, tým Web"
 					</tr>
 					</table>
 
-					<h2 style="margin-top:30px">Šablona notifikačního emailu</h2>
-					<p>Tento email se odesílá odběratelům při zveřejnění nového příspěvku.</p>
+					<h2 style="margin-top:30px"><?php echo esc_html__( 'Notification Email Template', 'auto-newsletter' ); ?></h2>
+					<p><?php echo esc_html__( 'This email is sent to subscribers when a new post is published.', 'auto-newsletter' ); ?></p>
 					<table class="form-table">
 					<?php
 					$notify_subject = auto_newsletter_mailer_get_option(
 						'auto_newsletter_notify_subject',
-						'🔔 Novinka na webu Web: {title}'
+						'🔔 New post: {title}'
 					);
 					$notify_body = auto_newsletter_mailer_get_option(
 						'auto_newsletter_notify_body',
@@ -646,7 +646,7 @@ Děkujeme, tým Web"
 						<td>
 							<input type="text" name="auto_newsletter_notify_subject"
 								value="<?php echo esc_attr( $notify_subject ); ?>" class="regular-text"
-								placeholder="🔔 Novinka na webu Web: {title}">
+								placeholder="🔔 New post: {title}">
 						</td>
 					</tr>
 					<tr>
@@ -798,11 +798,11 @@ function auto_newsletter_import_page() {
 	// Formulář pro upload
 	?>
 	<div class="wrap">
-		<h1>Pokročilé nastavení</h1>
+		<h1><?php echo esc_html__( 'Advanced Settings', 'auto-newsletter' ); ?></h1>
 
-		<!-- Turnstile nastavení (jen pro administrátory) -->
+		<!-- Turnstile settings (admins only) -->
 		<h2>Cloudflare Turnstile</h2>
-		<p>Nastavení pro ochranu přihlašovacího formuláře odběratelů.</p>
+		<p><?php echo esc_html__( 'Protect the subscription form with Cloudflare Turnstile.', 'auto-newsletter' ); ?></p>
 		<form method="post" action="options.php">
 			<?php settings_fields( 'auto_newsletter_import' ); ?>
 			<table class="form-table">
