@@ -343,11 +343,11 @@ function auto_newsletter_subscribers_page() {
 			</table>
 			<p style="margin-top:10px">
 				<select name="auto_newsletter_sub_action">
-					<option value="">Hromadná akce</option>
-					<option value="confirm">Potvrdit vybrané</option>
-					<option value="delete">Smazat vybrané</option>
-				</select>
-				<button type="submit" class="button">Použít</button>
+										<option value=""><?php echo esc_html__( 'Bulk Actions', 'auto-newsletter' ); ?></option>
+										<option value="confirm"><?php echo esc_html__( 'Confirm selected', 'auto-newsletter' ); ?></option>
+										<option value="delete"><?php echo esc_html__( 'Delete selected', 'auto-newsletter' ); ?></option>
+									</select>
+									<button type="submit" class="button"><?php echo esc_html__( 'Apply', 'auto-newsletter' ); ?></button>
 			</p>
 		</form>
 		<script>
@@ -550,7 +550,7 @@ add_filter( 'auto_newsletter_mailer_should_send', function() {
 	return get_option( 'auto_newsletter_mailer_enabled', '1' ) === '1';
 } );
 
-// ---- Šablona potvrzovacího emailu ----
+// ---- Email Template ----
 add_action( 'admin_init', 'auto_newsletter_confirm_template_settings' );
 function auto_newsletter_confirm_template_settings() {
 	register_setting( 'auto_newsletter_mailer_template', 'auto_newsletter_confirm_subject' );
@@ -638,7 +638,7 @@ Pokud jste to nebyli Vy, tento e-mail ignorujte.
 						. "na webu Web byl právě zveřejněn nový příspěvek:\n\n"
 						. "{title}\n\n{excerpt}\n\n"
 						. "--\nTento e-mail jste dostali, protože jste přihlášeni k odběru novinek.\n"
-						. "Pokud si nepřejete dostávat další e-maily, {unsub_link}."
+						. "If you do not wish to receive further emails, {unsub_link}."
 					);
 					?>
 					<tr>
@@ -663,7 +663,7 @@ Pokud jste to nebyli Vy, tento e-mail ignorujte.
 
 					--
 					Tento e-mail jste dostali, protože jste přihlášeni k odběru novinek.
-					Pokud si nepřejete dostávat další e-maily, {unsub_link}."><?php echo esc_textarea( $notify_body ); ?></textarea>
+					If you do not wish to receive further emails, {unsub_link}."><?php echo esc_textarea( $notify_body ); ?></textarea>
 							<p class="description">
 								Dostupné zástupné kódy: <code>{title}</code> (název příspěvku),
 								<code>{excerpt}</code> (úryvek), <code>{url}</code> (odkaz na příspěvek),
