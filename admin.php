@@ -32,7 +32,7 @@ function auto_newsletter_admin_menu() {
 	// První submenu se stejným slugem = přejmenuje auto-generated položku na "Nastavení"
 	add_submenu_page(
 		'auto-newsletter-mailer',
-		'Nastavení maileru',
+		'Newsletter Settings',
 		'Nastavení',
 		$mailer_cap,
 		'auto-newsletter-mailer',
@@ -58,7 +58,7 @@ function auto_newsletter_admin_menu() {
 	);
 	add_submenu_page(
 		'auto-newsletter-mailer',
-		'Odběratelé novinek',
+		'Subscribers',
 		'Odběratelé',
 		$mailer_cap,
 		'auto-newsletter-subscribers',
@@ -263,7 +263,7 @@ function auto_newsletter_subscribers_page() {
 	?>
 
 	<div class="wrap">
-		<h1>Odběratelé novinek</h1>
+		<h1>Subscribers</h1>
 
 		<!-- Statistiky -->
 		<div style="display:flex;gap:20px;margin:20px 0;flex-wrap:wrap">
@@ -368,63 +368,62 @@ function auto_newsletter_mailer_page() {
 	$notify_emails = get_option( 'auto_newsletter_notify_emails', '' );
 	?>
 	<div class="wrap">
-		<h1>Nastavení maileru</h1>
+		<h1><?php echo esc_html__( 'Newsletter Settings', 'auto-newsletter' ); ?></h1>
 		<?php settings_errors( 'auto_newsletter_mailer' ); ?>
 
 		<form method="post" action="options.php">
 			<?php settings_fields( 'auto_newsletter_mailer' ); ?>
 
-			<!-- ⚡ HLAVNÍ VYPÍNAČ -->
+			<!-- ⚡ MAIN SWITCH -->
 			<div style="background:#f0f6fc;border:1px solid #c5d9ed;border-left:4px solid #108615;padding:18px 22px;margin:20px 0;border-radius:4px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
 				<div style="font-size:22px;line-height:1">⚡</div>
 				<div style="flex:1;min-width:200px">
 					<label style="font-weight:600;font-size:14px;cursor:pointer">
 						<input type="checkbox" name="auto_newsletter_mailer_enabled" value="1" <?php checked( $master_enabled, '1' ); ?>>
-						Povolit odesílání notifikačních emailů odběratelům
+						<?php echo esc_html__( 'Enable sending notification emails to subscribers', 'auto-newsletter' ); ?>
 					</label>
 					<p style="margin:4px 0 0;color:#646970;font-size:13px">
-						Hlavní vypínač celého systému. Pokud vypnete, cron při běhu nic neodešle a nové
-						příspěvky se nezařazují do fronty. Hodí se pro ladění nebo dočasné pozastavení.
+						<?php echo esc_html__( 'Main switch for the entire system. If disabled, cron will not send anything and new posts will not be queued. Useful for debugging or temporary pause.', 'auto-newsletter' ); ?>
 					</p>
 				</div>
 			</div>
 
-			<!-- 📬 UPOZORNĚNÍ NA NOVÉ ODBĚRATELE -->
-			<h2 style="margin-top:28px">📬 Upozornění na nové odběratele</h2>
+			<!-- 📬 NEW SUBSCRIBER NOTIFICATIONS -->
+			<h2 style="margin-top:28px"><?php echo esc_html__( 'New Subscriber Notifications', 'auto-newsletter' ); ?></h2>
 			<p style="color:#646970;font-size:13px;margin-bottom:12px">
-				Po registraci nebo potvrzení nového odběratele pošle upozornění na zadané e-maily.
+				<?php echo esc_html__( 'Sends notification to specified emails after registration or confirmation of a new subscriber.', 'auto-newsletter' ); ?>
 			</p>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row">Registrace (nepotvrzený)</th>
+					<th scope="row"><?php echo esc_html__( 'Registration (unconfirmed)', 'auto-newsletter' ); ?></th>
 					<td>
 						<label>
 							<input type="checkbox" name="auto_newsletter_notify_on_register" value="1" <?php checked( $notify_register, '1' ); ?>>
-							Posílat upozornění při registraci nového odběratele
+							<?php echo esc_html__( 'Send notification on new subscriber registration', 'auto-newsletter' ); ?>
 						</label>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row">Potvrzení odběratele</th>
+					<th scope="row"><?php echo esc_html__( 'Subscriber Confirmation', 'auto-newsletter' ); ?></th>
 					<td>
 						<label>
 							<input type="checkbox" name="auto_newsletter_notify_on_confirm" value="1" <?php checked( $notify_confirm, '1' ); ?>>
-							Posílat upozornění při potvrzení odběratele
+							<?php echo esc_html__( 'Send notification on subscriber confirmation', 'auto-newsletter' ); ?>
 						</label>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row">Posílat na e-maily</th>
+					<th scope="row"><?php echo esc_html__( 'Notify emails', 'auto-newsletter' ); ?></th>
 					<td>
 						<input type="text" name="auto_newsletter_notify_emails"
 							value="<?php echo esc_attr( $notify_emails ); ?>" class="regular-text" style="width:100%;max-width:400px"
 							placeholder="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>">
-						<p class="description">Jedna nebo více adres oddělených čárkou (např. info@web.cz, kontakt@web.cz).<br>Pokud nevyplníte, použije se adresa správce webu. Neplatné e-maily se při uložení zahodí.</p>
+						<p class="description"><?php echo esc_html__( 'One or more email addresses separated by commas (e.g. info@web.cz, contact@web.cz). If empty, administrator email will be used. Invalid emails will be discarded on save.', 'auto-newsletter' ); ?></p>
 					</td>
 				</tr>
 			</table>
 
-			<?php submit_button(); ?>
+			<?php submit_button( esc_html__( 'Save Changes', 'auto-newsletter' ) ); ?>
 		</form>
 	</div>
 <?php

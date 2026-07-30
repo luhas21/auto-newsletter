@@ -16,6 +16,12 @@ define( 'AUTO_NEWSLETTER_VERSION', '1.0.0' );
 define( 'AUTO_NEWSLETTER_PATH', plugin_dir_path( __FILE__ ) );
 define( 'AUTO_NEWSLETTER_URL', plugin_dir_url( __FILE__ ) );
 
+// Load text domain for translations
+add_action( 'init', 'auto_newsletter_load_textdomain' );
+function auto_newsletter_load_textdomain() {
+	load_plugin_textdomain( 'auto-newsletter', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+
 // Vlastní updater (pouze pro development/testování, pokud je povoleno v wp-config.php)
 // Konfigurace: definujte v wp-config.php:
 // define( 'AUTO_NEWSLETTER_DEV_UPDATER', true );

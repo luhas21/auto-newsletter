@@ -1,0 +1,83 @@
+# Copyright (C) 2024 Petr Sahula
+# This file is distributed under the same license as the Auto Newsletter package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Auto Newsletter 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/luhas21/auto-newsletter\n"
+"Last-Translator: Petr Sahula <petr@sprava-wordpress.cz>\n"
+"Language-Team: Czech <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-05-20 12:00:00+00:00\n"
+"PO-Revision-Date: 2024-05-20 12:00:00+00:00\n"
+"Language: cs_CZ\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#: admin.php:371
+msgid "Newsletter Settings"
+msgstr "Nastavení maileru"
+
+#: admin.php:383
+msgid "Enable sending notification emails to subscribers"
+msgstr "Povolit odesílání notifikačních emailů odběratelům"
+
+#: admin.php:386
+msgid "Main switch for the entire system. If disabled, cron will not send anything and new posts will not be queued. Useful for debugging or temporary pause."
+msgstr "Hlavní vypínač celého systému. Pokud vypnete, cron při běhu nic neodešle a nové příspěvky se nezařazují do fronty. Hodí se pro ladění nebo dočasné pozastavení."
+
+#: admin.php:393
+msgid "New Subscriber Notifications"
+msgstr "Upozornění na nové odběratele"
+
+#: admin.php:395
+msgid "Sends notification to specified emails after registration or confirmation of a new subscriber."
+msgstr "Po registraci nebo potvrzení nového odběratele pošle upozornění na zadané e-maily."
+
+#: admin.php:399
+msgid "Registration (unconfirmed)"
+msgstr "Registrace (nepotvrzený)"
+
+#: admin.php:403
+msgid "Send notification on new subscriber registration"
+msgstr "Posílat upozornění při registraci nového odběratele"
+
+#: admin.php:408
+msgid "Subscriber Confirmation"
+msgstr "Potvrzení odběratele"
+
+#: admin.php:411
+msgid "Send notification on subscriber confirmation"
+msgstr "Posílat upozornění při potvrzení odběratele"
+
+#: admin.php:416
+msgid "Notify emails"
+msgstr "Posílat na e-maily"
+
+#: admin.php:421
+msgid "One or more email addresses separated by commas (e.g. info@web.cz, contact@web.cz). If empty, administrator email will be used. Invalid emails will be discarded on save."
+msgstr "Jedna nebo více adres oddělených čárkou (např. starosta@obec.cz, urad@obec.cz). Pokud nevyplníte, použije se adresa správce webu. Neplatné e-maily se při uložení zahodí."
+
+#: admin.php:426
+msgid "Save Changes"
+msgstr "Uložit změny"
+
+#: admin.php:556
+msgid "Confirmed"
+msgstr "Potvrzený"
+
+#: admin.php:557
+msgid "Unconfirmed"
+msgstr "Nepotvrzený"
+
+#: admin.php:558
+msgid "All"
+msgstr "Všichni"
+
+#: mailer.php:191
+msgid "Hello,\\n\\nYou have just subscribed to news from our website.\\n\\nClick this link to confirm:\\n{link}\\n\\nIf this wasn't you, ignore this email.\\n\\nThank you"
+msgstr "Dobrý den,\\n\\nprávě jste se přihlásili k odběru novinek z našeho webu.\\n\\nPro potvrzení klikněte na tento odkaz:\\n{link}\\n\\nPokud jste to nebyli Vy, tento e-mail ignorujte.\\n\\nDěkujeme"
+
+#: mailer.php:197
+msgid "Confirm your subscription"
+msgstr "Potvrďte odběr novinek"
